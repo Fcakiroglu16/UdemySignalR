@@ -10,7 +10,7 @@
 
         $(document).ready(() => {
 
-            var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44310/MyHub").build();
+            var connection = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Information).withAutomaticReconnect([1000, 1000, 1000, 1000]).withUrl("https://localhost:5001/MyHub").build();
 
             $("#conStatus").text(connection.connectionState);
 
