@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Scripts
+{
+    <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(() => {
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:44310/MyHub").build();
+
+            $("#conStatus").text(connection.connectionState);
+
+            connection.start().then(() => {
+                $("#conStatus").text(connection.connectionState);
+            }).catch((err) => { console.log(err) });
+            $("#conStatus").text(connection.connectionState);
+            $("#btnNameSave").click(() => {
+
+                connection.invoke("SendName", $("#txtName").val()).catch((err) => console.log(err))
+
+            })
+
+            connection.on("ReceiveName", (name) => {
+
+                $("#namesList").append(`<li class="list-group-item"> ${name}</li>`)
+
+            })
+
+        })
+    </script>
+
+}
+<div class="row">
+
+    <div class="col-md-8 offset-2">
+        <input class="form-control" type="text" id="txtName" />
+        <hr />
+        <button class="btn btn-primary" id="btnNameSave">İsim Kaydet</button>
+        <div class="alert alert-info">
+            Bağlantı Durumu:<strong id="conStatus"></strong>
+        </div>
+    </div>
+    <div class="col-md-8 offset-2">
+        <ul class="list-group" id="namesList"></ul>
+    </div>
+</div>
