@@ -9,21 +9,46 @@
     <script type="text/javascript">
 
         $(document).ready(() => {
-
-            var connection = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Information).withAutomaticReconnect([1000, 1000, 1000, 1000]).withUrl("https://localhost:5001/MyHub").build();
+            //configureLogging(signalR.LogLevel.Information)
+            var connection = new signalR.HubConnectionBuilder().withAutomaticReconnect([1000, 3000, 3000, 2000]).withUrl("https://localhost:5001/MyHub").build();
 
             $("#conStatus").text(connection.connectionState);
 
             connection.start().then(() => {
                 $("#conStatus").text(connection.connectionState);
+                $("#loading").hide();
+
             }).catch((err) => { console.log(err) });
             $("#conStatus").text(connection.connectionState);
+
+            connection.onreconnecting(err => {
+                $("#loading").show();
+                $("#conStatus").text(connection.connectionState);
+                console.log("onreconnection:" + err);
+
+            });
+
+            connection.onreconnected(connectionId => {
+                $("#loading").hide();
+                $("#conStatus").text(connection.connectionState);
+                console.log("connectionId:" + connectionId)
+
+            })
+
+            connection.onclose(() => {
+
+                $("#loading").hide();
+                $("#conStatus").text(connection.connectionState);
+
+            })
+
+            //Clicks
             $("#btnNameSave").click(() => {
 
                 connection.invoke("SendName", $("#txtName").val()).catch((err) => console.log(err))
 
             })
-
+            /// on methods
             connection.on("ReceiveName", (name) => {
 
                 $("#namesList").append(`<li class="list-group-item"> ${name}</li>`)
@@ -41,7 +66,15 @@
         <hr />
         <button class="btn btn-primary" id="btnNameSave">İsim Kaydet</button>
         <div class="alert alert-info">
-            Bağlantı Durumu:<strong id="conStatus"></strong>
+            <div class="float-left">
+                Bağlantı Durumu:<strong id="conStatus"></strong>
+            </div>
+            <div class="float-right">
+                <div id="loading" class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
         </div>
     </div>
     <div class="col-md-8 offset-2">
