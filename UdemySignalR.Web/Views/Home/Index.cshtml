@@ -62,6 +62,12 @@
 
             })
 
+            connection.on("Notify", (countText) => {
+
+                $("#notify").html(`<div class="alert alert-success">${countText} </div>`)
+
+            })
+
             //Clicks
             $("#btnNameSave").click(() => {
 
@@ -97,6 +103,8 @@
             </div>
             <div class="clearfix"></div>
         </div>
+
+        <div id="notify"></div>
     </div>
     <div class="col-md-8 offset-2">
         <ul class="list-group" id="namesList"></ul>
