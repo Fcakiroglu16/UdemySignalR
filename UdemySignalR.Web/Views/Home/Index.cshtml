@@ -131,7 +131,20 @@
 
             })
 
+            connection.on("ReceiveProduct", (product) => {
+
+                console.log(product);
+            })
             //Clicks
+
+            $("#btnProduct").click(() => {
+
+                let product = { "Id": 1, "Name": "Kalem", "Price": 100, "Stock": 200 };
+
+                connection.invoke("SendProduct", product);
+
+            })
+
             $("#btnNameSave").click(() => {
 
                 connection.invoke("SendName", $("#txtName").val()).catch((err) => console.log(err))
@@ -185,6 +198,8 @@
         <hr />
         <button class="btn btn-primary" id="btnNameSave">İsim Kaydet</button>
         <button class="btn btn-warning" id="btnNameTeam">İsim Kaydet(Takım)</button>
+
+        <button class="btn btn-danger" id="btnProduct">Ürün Gönder</button>
         <div class="alert alert-info mt-2">
             <div class="float-left">
                 Bağlantı Durumu:<strong id="conStatus"></strong>
