@@ -45,7 +45,7 @@ namespace UdemySignalR.API.Hubs
 
         public async Task GetNames()
         {
-            await Clients.All.SendAsync("ReceiveNames", Names);
+            await Clients.Caller.SendAsync("ReceiveNames", Names);
         }
 
         //Groups
@@ -89,7 +89,7 @@ namespace UdemySignalR.API.Hubs
                 Users = x.Users.ToList()
             });
 
-            await Clients.All.SendAsync("ReceiveNamesByGroup", teams);
+            await Clients.Caller.SendAsync("ReceiveNamesByGroup", teams);
         }
 
         public async override Task OnConnectedAsync()
